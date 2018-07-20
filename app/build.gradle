@@ -1,0 +1,54 @@
+apply plugin: "com.android.application"
+
+apply plugin: "kotlin-android"
+
+apply plugin: "kotlin-android-extensions"
+
+android {
+    compileSdkVersion 27
+    defaultConfig {
+        applicationId "br.com.paulosalvatore.pushnotification_kotlin"
+        minSdkVersion 15
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar"])
+	implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+	implementation "com.android.support:appcompat-v7:$supportLibVersion"
+	implementation "com.android.support.constraint:constraint-layout:$constraintVersion"
+	testImplementation "junit:junit:$junitVersion"
+	androidTestImplementation "com.android.support.test:runner:$runnerVersion"
+	androidTestImplementation "com.android.support.test.espresso:espresso-core:$espressoVersion"
+
+	// Anko
+	implementation "org.jetbrains.anko:anko-commons:$ankoVersion"
+	implementation "org.jetbrains.anko:anko-design:$ankoVersion"
+
+	// FCM Messaging
+	implementation "com.google.firebase:firebase-core:$firebaseCoreVersion"
+	implementation "com.google.firebase:firebase-messaging:$firebaseMessagingVersion"
+}
+
+configurations.all {
+	resolutionStrategy.eachDependency { details ->
+		def requested = details.requested
+		if (requested.group == "com.android.support") {
+			if (!requested.name.startsWith("multidex")) {
+				details.useVersion "${supportLibVersion}"
+			}
+		}
+	}
+}
+
+apply plugin: "com.google.gms.google-services"
